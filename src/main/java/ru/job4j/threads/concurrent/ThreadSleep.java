@@ -1,7 +1,7 @@
 package ru.job4j.threads.concurrent;
 
 public class ThreadSleep {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Thread thread = new Thread(
                 () -> {
                     try {
@@ -14,6 +14,8 @@ public class ThreadSleep {
                 }
         );
         thread.start();
+        Thread.sleep(500);
+        System.out.println(thread.getState());
         System.out.println("Main");
     }
 }
