@@ -12,15 +12,12 @@ public class ThreadState {
         System.out.println(first.getState());
         System.out.println(second.getState());
         printCurrentThreadName(20);
-        while (true) {
-            if (first.getState() == Thread.State.TERMINATED && second.getState() == Thread.State.TERMINATED) {
-                System.out.println(
-                        "First thread state: " + first.getState() + "; Second thread state: " + second.getState()
-                );
-                System.out.println("Работа завершена!");
-                break;
-            }
+
+        while (first.getState() != Thread.State.TERMINATED || second.getState() != Thread.State.TERMINATED) {
+            continue;
         }
+        System.out.println("First thread state: " + first.getState() + "; Second thread state: " + second.getState());
+        System.out.println("Работа завершена!");
     }
 
     private static void printCurrentThreadName(int countOfHowManyTimes) {
