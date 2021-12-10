@@ -27,21 +27,27 @@ public class Wget implements Runnable {
                      url.contains("/") ? url.split("/")[url.split("/").length - 1] : url)
         ) {
 
-            byte[] dataBuffer = new byte[speed];
+            byte[] dataBuffer = new byte[1024];
             int bytesRead = 0;
-            int sumBytesRead = 0;
-            long before = System.currentTimeMillis();
+            int bytesWritten = 0;
+            long before = 0;
+            long after = 0;
+            long differenceTime = 0;
             while (bytesRead != -1) {
-                bytesRead = in.read(dataBuffer, 0, speed);
-                sumBytesRead = sumBytesRead + bytesRead;
+                before = System.currentTimeMillis();
+                bytesRead = in.read(dataBuffer, 0, 1024);
                 fileOutputStream.write(dataBuffer, 0, bytesRead != -1 ? bytesRead : 0);
-            }
-            long after = System.currentTimeMillis();
-            long timeForLoad = after - before;
-            long difference = ((sumBytesRead / this.speed) - timeForLoad / 1000) * 1000;
-            if (difference > 0) {
-                System.out.println("Waiting " + difference + " milliseconds");
-                Thread.sleep(difference);
+                bytesWritten = bytesWritten + bytesRead;
+                after = System.currentTimeMillis();
+                if (bytesWritten >= speed) {
+                    bytesWritten = 0;
+                    differenceTime = after - before;
+                    if (differenceTime < 1000) {
+                        long sleepTime = 1000 - differenceTime;
+                        System.out.println("Waiting " + sleepTime + " milliseconds");
+                        Thread.sleep(sleepTime);
+                    }
+                }
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
