@@ -3,7 +3,10 @@ package ru.job4j.threads.concurrent;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 
 /**
  * Speed - Mb/second
@@ -24,15 +27,15 @@ public class Wget implements Runnable {
     public void run() {
         try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
              FileOutputStream fileOutputStream = new FileOutputStream(
-                     url.contains("/") ? url.split("/")[url.split("/").length - 1] : url)
+                     Paths.get(new URI(url).getPath()).getFileName().toString())
         ) {
 
             byte[] dataBuffer = new byte[1024];
             int bytesRead = 0;
             int bytesWritten = 0;
-            long before = 0;
-            long after = 0;
-            long differenceTime = 0;
+            long before;
+            long after;
+            long differenceTime;
             while (bytesRead != -1) {
                 before = System.currentTimeMillis();
                 bytesRead = in.read(dataBuffer, 0, 1024);
@@ -49,7 +52,7 @@ public class Wget implements Runnable {
                     }
                 }
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException | URISyntaxException e) {
             e.printStackTrace();
         }
     }
