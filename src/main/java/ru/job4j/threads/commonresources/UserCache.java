@@ -1,6 +1,5 @@
 package ru.job4j.threads.commonresources;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,6 +20,8 @@ public final class UserCache {
     }
 
     public List<User> findAll() {
-        return new ArrayList<>(users.values()).stream().map(u -> User.of(u.getName())).collect(Collectors.toList());
+        return users.values().stream()
+                             .map(u -> User.of(u.getName()))
+                             .collect(Collectors.toList());
     }
 }
