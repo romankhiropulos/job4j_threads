@@ -20,12 +20,13 @@ public final class FileParser {
     }
 
     private String transformFileToString(Predicate<Integer> filter) throws IOException {
-        InputStream i = new FileInputStream(file);
         StringBuilder output = new StringBuilder();
-        int data;
-        while ((data = i.read()) > 0) {
-            if (filter.test(data)) {
-                output.append((char) data);
+        try (InputStream inputStream = new FileInputStream(file)) {
+            int data;
+            while ((data = inputStream.read()) > 0) {
+                if (filter.test(data)) {
+                    output.append((char) data);
+                }
             }
         }
         return output.toString();
