@@ -5,7 +5,7 @@ import net.jcip.annotations.ThreadSafe;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 @ThreadSafe
 public class UserStorage {
@@ -14,12 +14,11 @@ public class UserStorage {
     private final Map<Integer, User> userStorage = new HashMap<>();
 
     public synchronized boolean add(User user) {
-      this.userStorage.put(user.getId(), user);
-      return this.userStorage.get(user.getId()) != null;
+        return this.userStorage.putIfAbsent(user.getId(), user) != null;
     }
 
     public synchronized boolean update(User user) {
-        return this.userStorage.put(user.getId(), user) != null;
+        return this.userStorage.replace(user.getId(), user) != null;
     }
 
     public synchronized boolean delete(User user) {
@@ -27,8 +26,22 @@ public class UserStorage {
     }
 
     public synchronized void transfer(int fromId, int toId, int amount) {
-        Optional.of(this.userStorage.get(fromId)).ifPresent(u -> u.setAmount(u.getAmount() - amount));
-        Optional.of(this.userStorage.get(toId)).ifPresent(u -> u.setAmount(u.getAmount() + amount));
+        User userFrom;
+        User userTo;
+        try {
+            userFrom = Objects.requireNonNull(this.userStorage.get(fromId), String.valueOf(fromId));
+            userTo = Objects.requireNonNull(this.userStorage.get(toId), String.valueOf(toId));
+        } catch (NullPointerException npe) {
+            System.out.println("User not found! Id: " + npe.getMessage());
+            return;
+        }
+
+        if (userFrom.getAmount() >= amount) {
+            userFrom.setAmount(userFrom.getAmount() - amount);
+            userTo.setAmount(userTo.getAmount() + amount);
+        } else {
+            throw new IllegalArgumentException("Not enough money in the user account: " + fromId);
+        }
     }
 
     public static void main(String[] args) throws InterruptedException {
