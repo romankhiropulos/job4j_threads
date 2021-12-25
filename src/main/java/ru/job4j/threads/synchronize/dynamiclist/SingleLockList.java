@@ -6,6 +6,7 @@ import net.jcip.annotations.ThreadSafe;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @ThreadSafe
 public class SingleLockList<T> implements Iterable<T> {
@@ -27,11 +28,13 @@ public class SingleLockList<T> implements Iterable<T> {
     }
 
     @Override
-    public synchronized  Iterator<T> iterator() {
+    public synchronized Iterator<T> iterator() {
         return copy(this.list).iterator();
     }
 
     private List<T> copy(List<T> list) {
-        return list;
+        return list.stream()
+                   .map(u -> u)
+                   .collect(Collectors.toList());
     }
 }

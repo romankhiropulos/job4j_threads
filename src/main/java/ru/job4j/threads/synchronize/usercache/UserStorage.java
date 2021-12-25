@@ -14,7 +14,7 @@ public class UserStorage {
     private final Map<Integer, User> userStorage = new HashMap<>();
 
     public synchronized boolean add(User user) {
-        return this.userStorage.putIfAbsent(user.getId(), user) != null;
+        return this.userStorage.putIfAbsent(user.getId(), user) == null;
     }
 
     public synchronized boolean update(User user) {
@@ -26,16 +26,8 @@ public class UserStorage {
     }
 
     public synchronized void transfer(int fromId, int toId, int amount) {
-        User userFrom;
-        User userTo;
-        try {
-            userFrom = Objects.requireNonNull(this.userStorage.get(fromId), String.valueOf(fromId));
-            userTo = Objects.requireNonNull(this.userStorage.get(toId), String.valueOf(toId));
-        } catch (NullPointerException npe) {
-            System.out.println("User not found! Id: " + npe.getMessage());
-            return;
-        }
-
+        User userFrom = Objects.requireNonNull(this.userStorage.get(fromId), String.valueOf(fromId));
+        User userTo = Objects.requireNonNull(this.userStorage.get(toId), String.valueOf(toId));
         if (userFrom.getAmount() >= amount) {
             userFrom.setAmount(userFrom.getAmount() - amount);
             userTo.setAmount(userTo.getAmount() + amount);
