@@ -3,38 +3,57 @@ package ru.job4j.threads.synchronize.dynamiclist;
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.io.*;
+import java.util.*;
 
 @ThreadSafe
-public class SingleLockList<T> implements Iterable<T> {
+public class SingleLockList<T> implements Iterable<T>, Serializable {
 
     @GuardedBy("this")
     private final List<T> list;
 
-    public SingleLockList(List<T> list) {
+    public SingleLockList(List<T> list) throws IOException, ClassNotFoundException {
         Objects.requireNonNull(list);
-        this.list = copy(list);
+        this.list = copyList(list);
     }
 
-    public void add(T value) {
-
+    public synchronized void add(T value) throws IOException, ClassNotFoundException {
+        this.list.add((T) convertFromBytes(convertToBytes(value)));
     }
 
-    public T get(int index) {
-        return null;
+    public synchronized SingleLockList<T> copy() throws IOException, ClassNotFoundException {
+        return this.getClone();
     }
 
     @Override
     public synchronized Iterator<T> iterator() {
-        return copy(this.list).iterator();
+        return this.list.iterator();
     }
 
-    private List<T> copy(List<T> list) {
-        return list.stream()
-                   .map(u -> u)
-                   .collect(Collectors.toList());
+    public synchronized T get(int index) throws IOException, ClassNotFoundException {
+        return (T) convertFromBytes(convertToBytes(this.list.get(index)));
+    }
+
+    private List<T> copyList(List<T> list) throws IOException, ClassNotFoundException {
+        return (List<T>) convertFromBytes(convertToBytes(list));
+    }
+
+    private SingleLockList<T> getClone() throws IOException, ClassNotFoundException {
+        return (SingleLockList<T>) convertFromBytes(convertToBytes(this));
+    }
+
+    private byte[] convertToBytes(Object object) throws IOException {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutputStream out = new ObjectOutputStream(bos)) {
+            out.writeObject(object);
+            return bos.toByteArray();
+        }
+    }
+
+    private Object convertFromBytes(byte[] bytes) throws IOException, ClassNotFoundException {
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+             ObjectInputStream in = new ObjectInputStream(bis)) {
+            return in.readObject();
+        }
     }
 }
