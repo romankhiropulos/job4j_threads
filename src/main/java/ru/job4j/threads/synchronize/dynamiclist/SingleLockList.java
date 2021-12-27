@@ -12,48 +12,25 @@ public class SingleLockList<T> implements Iterable<T>, Serializable {
     @GuardedBy("this")
     private final List<T> list;
 
-    public SingleLockList(List<T> list) throws IOException, ClassNotFoundException {
+    public SingleLockList(List<T> list) {
         Objects.requireNonNull(list);
-        this.list = copyList(list);
+        this.list = new ArrayList<>(list);
     }
 
-    public synchronized void add(T value) throws IOException, ClassNotFoundException {
-        this.list.add((T) convertFromBytes(convertToBytes(value)));
+    public synchronized void add(T value) {
+        list.add(value);
     }
 
-    public synchronized SingleLockList<T> copy() throws IOException, ClassNotFoundException {
-        return this.getClone();
+    public synchronized T get(int index) {
+        return list.get(index);
     }
 
     @Override
     public synchronized Iterator<T> iterator() {
-        return this.list.iterator();
+        return copy().iterator();
     }
 
-    public synchronized T get(int index) throws IOException, ClassNotFoundException {
-        return (T) convertFromBytes(convertToBytes(this.list.get(index)));
-    }
-
-    private List<T> copyList(List<T> list) throws IOException, ClassNotFoundException {
-        return (List<T>) convertFromBytes(convertToBytes(list));
-    }
-
-    private SingleLockList<T> getClone() throws IOException, ClassNotFoundException {
-        return (SingleLockList<T>) convertFromBytes(convertToBytes(this));
-    }
-
-    private byte[] convertToBytes(Object object) throws IOException {
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-             ObjectOutputStream out = new ObjectOutputStream(bos)) {
-            out.writeObject(object);
-            return bos.toByteArray();
-        }
-    }
-
-    private Object convertFromBytes(byte[] bytes) throws IOException, ClassNotFoundException {
-        try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-             ObjectInputStream in = new ObjectInputStream(bis)) {
-            return in.readObject();
-        }
+    private synchronized List<T> copy() {
+        return new ArrayList<>(list);
     }
 }

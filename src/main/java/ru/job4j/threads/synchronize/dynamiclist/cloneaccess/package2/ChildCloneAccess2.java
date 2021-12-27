@@ -37,6 +37,9 @@ public class ChildCloneAccess2 extends CloneAccess implements Cloneable, Seriali
         }
 
         System.out.println(childCloneAccess2Clone);
+
+        childCloneAccess2Clone = (ChildCloneAccess2) childCloneAccess2.copy();
+        System.out.println(childCloneAccess2Clone);
     }
 
     private ChildCloneAccess2 getClone(ChildCloneAccess2 childCloneAccess2) throws IOException, ClassNotFoundException {
@@ -72,7 +75,7 @@ public class ChildCloneAccess2 extends CloneAccess implements Cloneable, Seriali
     }
 
     private Object copy() throws CloneNotSupportedException {
-        return this.clone();
+        return clone();
     }
 
     @Override
