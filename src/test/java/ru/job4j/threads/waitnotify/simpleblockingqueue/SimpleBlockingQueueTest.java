@@ -2,6 +2,9 @@ package ru.job4j.threads.waitnotify.simpleblockingqueue;
 
 import org.junit.Test;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 public class SimpleBlockingQueueTest {
 
     @Test
@@ -15,5 +18,6 @@ public class SimpleBlockingQueueTest {
         consumerThread.start();
         producerThread.join();
         consumerThread.join();
+        assertThat(simpleBlockingQueue.getSizeQueue(), is(0));
     }
 }

@@ -22,6 +22,10 @@ public class SimpleBlockingQueue<T> {
         this.sizeLimit = sizeLimit;
     }
 
+    public synchronized int getSizeQueue() {
+        return this.queue.size();
+    }
+
     public synchronized void offer(T value) {
         while (this.queue.size() == this.sizeLimit) {
             try {
