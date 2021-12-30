@@ -10,14 +10,14 @@ public class Consumer implements Runnable {
 
     @Override
     public void run() {
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 20; i++) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             var value = simpleBlockingQueue.poll();
-            System.out.println(value);
+            System.out.println("Get item: " + value);
         }
     }
 }

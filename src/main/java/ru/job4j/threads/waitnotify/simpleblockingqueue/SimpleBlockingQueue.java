@@ -23,7 +23,7 @@ public class SimpleBlockingQueue<T> {
     }
 
     public synchronized void offer(T value) {
-        while (this.queue.size() >= this.sizeLimit) {
+        while (this.queue.size() == this.sizeLimit) {
             try {
                 wait();
                 System.out.println("Producer waiting...");
@@ -32,7 +32,6 @@ public class SimpleBlockingQueue<T> {
                 e.printStackTrace();
             }
         }
-
         if (this.queue.size() == 0) {
             notifyAll();
         }
