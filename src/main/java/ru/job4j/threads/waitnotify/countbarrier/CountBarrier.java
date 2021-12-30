@@ -1,4 +1,4 @@
-package ru.job4j.threads.waitnotify;
+package ru.job4j.threads.waitnotify.countbarrier;
 
 public class CountBarrier {
 
