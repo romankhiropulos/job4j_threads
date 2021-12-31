@@ -13,11 +13,11 @@ public class Consumer implements Runnable {
         for (int i = 0; i < 20; i++) {
             try {
                 Thread.sleep(500);
+                var value = simpleBlockingQueue.poll();
+                System.out.println("Get item: " + value);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            var value = simpleBlockingQueue.poll();
-            System.out.println("Get item: " + value);
         }
     }
 }

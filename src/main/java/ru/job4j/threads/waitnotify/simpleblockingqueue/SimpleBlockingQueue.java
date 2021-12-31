@@ -26,35 +26,22 @@ public class SimpleBlockingQueue<T> {
         return this.queue.size();
     }
 
-    public synchronized void offer(T value) {
-        while (this.queue.size() == this.sizeLimit) {
-            try {
-                wait();
-                System.out.println("Producer waiting...");
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                e.printStackTrace();
-            }
-        }
-        if (this.queue.size() == 0) {
-            notifyAll();
+    public synchronized void offer(T value) throws InterruptedException {
+        while (this.queue.size() >= this.sizeLimit) {
+            wait();
+            System.out.println("Producer waiting...");
         }
         this.queue.add(value);
+        notifyAll();
     }
 
-    public synchronized T poll() {
+    public synchronized T poll() throws InterruptedException {
         while (this.queue.size() == 0) {
-            try {
-                wait();
-                System.out.println("Consumer waiting...");
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                e.printStackTrace();
-            }
+            wait();
+            System.out.println("Consumer waiting...");
         }
-        if (this.queue.size() == this.sizeLimit) {
-            notifyAll();
-        }
-        return this.queue.poll();
+        var item = this.queue.poll();
+        notifyAll();
+        return item;
     }
 }
