@@ -22,10 +22,6 @@ public class SimpleBlockingQueue<T> {
         this.sizeLimit = sizeLimit;
     }
 
-    public synchronized int getSizeQueue() {
-        return this.queue.size();
-    }
-
     public synchronized void offer(T value) throws InterruptedException {
         while (this.queue.size() >= this.sizeLimit) {
             wait();
@@ -43,5 +39,13 @@ public class SimpleBlockingQueue<T> {
         var item = this.queue.poll();
         notifyAll();
         return item;
+    }
+
+    public synchronized boolean isEmpty() {
+        return this.queue.isEmpty();
+    }
+
+    public synchronized int getSizeQueue() {
+        return this.queue.size();
     }
 }
