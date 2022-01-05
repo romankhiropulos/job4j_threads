@@ -43,10 +43,10 @@ public class SimpleBlockingQueueTest {
         Thread producerThread = new Thread(producer);
         Thread consumerThread = new Thread(consumer);
         producerThread.start();
-//        Thread.sleep(100);
+        Thread.sleep(100);
         consumerThread.start();
-//        producerThread.join();
-//        consumerThread.join();
+        producerThread.join();
+        consumerThread.join();
         assertThat(simpleBlockingQueue.isEmpty(), is(true));
     }
 
