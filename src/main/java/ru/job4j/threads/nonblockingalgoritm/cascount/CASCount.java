@@ -22,13 +22,6 @@ public class CASCount {
     }
 
     public int get() {
-        int current;
-        do {
-            current = count.get();
-            if (current == 0) {
-                throw new UnsupportedOperationException("Count is not impl.");
-            }
-        } while (!count.compareAndSet(current, current));
-        return current;
+        return count.get();
     }
 }
