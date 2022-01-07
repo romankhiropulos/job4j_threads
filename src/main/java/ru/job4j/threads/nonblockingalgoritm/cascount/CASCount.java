@@ -2,22 +2,19 @@ package ru.job4j.threads.nonblockingalgoritm.cascount;
 
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @ThreadSafe
 public class CASCount {
 
-    private final AtomicReference<Integer> count = new AtomicReference<>();
+    private final AtomicInteger count = new AtomicInteger();
 
     public void increment() {
-        Integer current;
-        Integer newCount;
+        int current;
+        int newCount;
         do {
             current = count.get();
-            newCount = ++current;
-            if (current == 0) {
-                throw new UnsupportedOperationException("Count is not impl.");
-            }
+            newCount = current + 1;
         } while (!count.compareAndSet(current, newCount));
     }
 
