@@ -29,7 +29,7 @@ public class Base {
         this.name = name;
     }
 
-    public void increaseVersion() {
-        version = version + 1;
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

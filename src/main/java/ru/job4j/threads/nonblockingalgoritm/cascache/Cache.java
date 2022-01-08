@@ -13,13 +13,13 @@ public class Cache {
         return memory.putIfAbsent(model.getId(), model) == null;
     }
 
-    public boolean update(Base model) {
+    public boolean update(Base model) throws OptimisticException {
         return memory.computeIfPresent(model.getId(), (id, base) -> {
             if (base.getVersion() != model.getVersion()) {
                 throw new OptimisticException("The model was previously changed");
             }
-            base.increaseVersion();
-            return memory.replace(model.getId(), base);
+            base.setVersion(base.getVersion() + 1);
+            return base;
         }) != null;
     }
 
