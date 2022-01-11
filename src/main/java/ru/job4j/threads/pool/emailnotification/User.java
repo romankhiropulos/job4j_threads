@@ -1,4 +1,4 @@
-package ru.job4j.threads.emailnotification;
+package ru.job4j.threads.pool.emailnotification;
 
 import java.util.Objects;
 import java.util.StringJoiner;
