@@ -59,8 +59,5 @@ public class ThreadPool {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        int[] array = new int[10];
-        array[-1] = 2;
     }
 }
