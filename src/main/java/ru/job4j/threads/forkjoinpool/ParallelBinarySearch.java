@@ -49,6 +49,8 @@ public class ParallelBinarySearch<T extends Comparable<T>> extends RecursiveTask
 
     public static <T extends Comparable<? super T>> int sort(T[] array, T key) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        return (int) forkJoinPool.invoke(new ParallelBinarySearch(array, key, 0, array.length - 1));
+        return (int) forkJoinPool.invoke(
+                new ParallelBinarySearch(array, key, 0, array.length - 1)
+        );
     }
 }
