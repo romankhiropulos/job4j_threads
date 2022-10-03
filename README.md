@@ -6,4 +6,4 @@
 
 ## Возможности
 
-Testing git stash!
+безграничны! resolve conflict
