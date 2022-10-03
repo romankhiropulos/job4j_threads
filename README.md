@@ -6,4 +6,4 @@
 
 ## Возможности
 
-Testing git stash!
+Testing resolve commit task_126026!
