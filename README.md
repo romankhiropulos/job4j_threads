@@ -6,4 +6,4 @@
 
 ## Возможности
 
-After stash
+Testing git stash!
