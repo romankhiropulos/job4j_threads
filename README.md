@@ -6,4 +6,4 @@
 
 ## Возможности
 
-безграничны! resolve conflict
+Testing resolve commit task_126026!
