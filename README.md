@@ -6,4 +6,4 @@
 
 ## Возможности
 
-Testing resolve commit task_126026!
+Testing git checkout revision and make hotfix_3!
